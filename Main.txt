@@ -1,0 +1,107 @@
+
+; Journal
+;-------------------------------------------------------------------
+
+; Main2
+;-------------------------------------------------------------------
+2006/01/02 Null
+    Income:Paypal                                                  0
+    Expenses:Unknown                                               0
+    Assets:Checking                                                0
+    Assets:Wallet                                                  0
+    Equity                                                         0
+
+; Paypal
+;-------------------------------------------------------------------
+2006/01/02 Paypal Invoice
+    Income:Paypal                                                  0
+    Assets:Checking                                                0
+
+; Expenses
+;-------------------------------------------------------------------
+
+2006/01/02 Cigarettes
+    Assets:Wallet                                                  0
+    Assets:Checking                                                0
+    Expenses:Sustenance:Cigarettes                                 0
+
+2006/01/02 Taxi
+    Expenses:Transport:Taxi                                        0
+    Assets:Wallet                                                  0
+
+2006/01/02 Uber
+    Assets:Wallet                                                  0
+    Expenses:Transport:Uber                                        0
+
+2006/01/02 Mc
+    Assets:Wallet                                                  0
+    Expenses:Sustenance:Food:Mc                                    0
+
+2006/01/02 KFC
+    Assets:Wallet                                                  0
+    Expenses:Sustenance:Food:KFC                                   0
+
+2006/01/02 Sfiha
+    Assets:Checking                                                0
+    Expenses:Sustenance:Food:Sfiha                                 0
+
+2006/01/02 Beer Extra
+    Assets:Wallet                                                  0
+    Expenses:Sustenance:Beer:ISS                                   0
+
+2006/01/02 Beer Munhoz
+    Assets:Wallet                                                  0
+    Expenses:Sustenance:Beer:ISS                                   0
+
+2006/01/02 Unkle
+    Assets:Wallet                                                  0
+    Expenses:Sustenance:Beer:Bar                                   0
+
+2006/01/02 Big Marcus
+    Assets:Wallet                                                  0
+    Expenses:Sustenance:Beer:Bar                                   0
+
+2006/01/02 Doug
+    Assets:Wallet                                                  0
+    Expenses:Sustenance:Beer:Bar                                   0
+
+2006/01/02 Meme
+    Assets:Checking                                                0
+    Expenses:Other:Gift                                            0
+
+2006/01/02 Baksheesh 
+    Assets:Wallet                                                  0
+    Expenses:Other:Baksheesh                                       0
+
+2006/01/02 Water 
+    Assets:Wallet                                                  0
+    Expenses:Sustenace:Water                                       0
+
+; Transfers
+;-------------------------------------------------------------------
+
+2006/01/02 Xfer
+    Assets:Wallet                                                  0
+    Assets:Checking                                                0
+    Assets:Funds:Cash                                              0
+    Assets:Funds:Bank                                              0
+    Income:Other:Reimbursement                                     0
+
+
+; Work
+;-------------------------------------------------------------------
+
+2006/01/02 Purchase
+    Assets:Checking                                               00
+    Silver:Material                                               00
+    Silver:Chasm                                                  00
+
+2006/01/02 Confection
+    Silver:Product                                                00
+    Silver:Material                                               00
+
+2006/01/02 Sell
+    Assets:Checking                                               00
+    Silver:Product                                                00
+    Silver:Chasm                                                  00
+
