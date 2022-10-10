@@ -1,0 +1,25 @@
+#!/bin/bash
+uuid=$(tool/uuid)
+if [ "$4" = "" ]; then
+	if [ "$1" != "" ]; then
+		echo date,payee,amount,uuid >inlet.tmp
+		date=$(date '+%Y-%m-%d')
+		echo $date,$1,$2,$uuid >>inlet.tmp
+		if [ "$3" != "" ]; then
+			tool/limport -f Main.txt -date-format "2006-01-02" "$3" inlet.tmp | unix2dos
+		else
+			tool/limport -f Main.txt -date-format "2006-01-02" -set-search "$3" "$1" inlet.tmp | unix2dos
+
+		fi
+		rm inlet.tmp
+		exit
+	fi
+	echo Usage:
+	echo 'insert <payee> <amount> <source account> [<target account>]'
+else
+	echo date,payee,amount,uuid >inlet.tmp
+	date=$(date '+%Y-%m-%d')
+	echo $date,$1,$2,$uuid >>inlet.tmp
+	tool/limport -f Main.txt -date-format "2006-01-02" -set-search "$4" "$3" inlet.tmp | unix2dos
+	rm inlet.tmp
+fi

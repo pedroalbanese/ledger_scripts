@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# ConverCSV
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+echo ""|unix2dos > JointCSV.txt
+
+tool/limport -f Main.txt -date-format "2006-01-02" Assets:Wallet "Finances - Cash.csv"|tool/ledger -f - -columns 59 print|unix2dos >> JointCSV.txt
+
+tool/limport -f Main.txt -date-format "2006-01-02" Assets:Checking "Finances - Card.csv"|tool/ledger -f - -columns 59 print|unix2dos >> JointCSV.txt
+
+tool/limport -f Main.txt -date-format "2006-01-02" -set-search Assets:Checking Paypal "Finances - Paypal.csv"|tool/ledger -f - -columns 59 print|unix2dos >> JointCSV.txt
+
+tool/limport -f Main.txt -date-format "2006-01-02" -neg -set-search Assets:Checking Assets:Wallet "Finances - Withdraw.csv"|tool/ledger -f - -columns 59 print|unix2dos >> JointCSV.txt
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+tool/ledger -f Journal.txt -columns 58 $* |unix2dos | sed '/^;#.*/d'

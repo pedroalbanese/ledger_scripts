@@ -1,0 +1,26 @@
+#!/bin/bash
+
+if [ "$1" = "Verify" ]; then
+	src=$(cat -|tee opa2.txt|tool/jwt -key shared.txt -alg HS256 -verify - -show -|grep src|awk '{print $2}'|awk -F"," '{print $1}'| tr -d '"')
+	acc=$(cat opa2.txt|tool/jwt -key shared.txt -alg HS256 -verify - -show -|grep acc|awk '{print $2}'|awk -F"," '{print $1}'| tr -d '"')
+	cat opa2.txt |tool/jwt -key shared.txt -alg HS256 -verify -|tool/json2csv -header-style slash >Auth.csv
+	rm opa2.txt
+	tool/limport -date-format "2006/01/02" -f main.txt -set-search "$acc" "$src" Auth.csv
+	rm Auth.csv
+elif [ "$1" = "Sign" ]; then
+	if [ -z "$2" ]
+	then
+		echo "No argument supplied"
+		echo "Usage: <Payee> <Amount> <Source:Account> [<Target:Account>]"
+		exit 1
+	fi
+	uuid=$(tool/uuid)
+	date=$(date '+%Y/%m/%d')
+	tool/jwt -key shared.txt -alg HS256 -claim date=$date -claim payee="$2" -claim amount="$3" -claim uuid=$uuid -header src="$4" -header acc="$5" -sign +
+elif [ "$1" = "Check" ]; then
+	cat - |tool/jwt -key shared.txt -alg HS256 -verify -|tool/json2csv -header-style slash
+elif [ "$1" = "Parse" ]; then
+	cat - |tool/jwt -key shared.txt -alg HS256 -verify -
+elif [ "$1" = "Show" ]; then
+	cat - |tool/jwt -key shared.txt -alg HS256 -verify - -show -
+fi

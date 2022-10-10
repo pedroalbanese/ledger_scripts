@@ -1,0 +1,143 @@
+#!/bin/bash
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# ConverCSV
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+echo ""|unix2dos > JointCSV.txt
+
+tool/limport -f Main.txt -date-format "2006-01-02" Assets:Wallet "Finances - Cash.csv"|tool/ledger -f - -columns 58 print|unix2dos >> JointCSV.txt
+
+tool/limport -f Main.txt -date-format "2006-01-02" Assets:Checking "Finances - Card.csv"|tool/ledger -f - -columns 58 print|unix2dos >> JointCSV.txt
+
+tool/limport -f Main.txt -date-format "2006-01-02" -set-search Assets:Checking Paypal "Finances - Paypal.csv"|tool/ledger -f - -columns 58 print|unix2dos >> JointCSV.txt
+
+tool/limport -f Main.txt -date-format "2006-01-02" -neg -set-search Assets:Checking Assets:Wallet "Finances - Withdraw.csv"|tool/ledger -f - -columns 58 print|unix2dos >> JointCSV.txt
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# networth.tmp
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+echo "" >>networth.tmp
+
+tool/gcal --islamic-civil-holidays -qbr -n- -X . | sed 1,5d | head -n 12 >>bal2019g.tmp 
+tool/boxes -f tool/boxes.cfg -s 80 bal2019g.tmp >>networth.tmp
+rm bal2019g.tmp
+
+echo "" >>networth.tmp
+
+echo "***************/ ASSETS /**************" >> Bal1.txt
+sh Ledger -empty -columns 39 -depth 2 bal Ass >> Bal1.txt
+
+echo ""  >> Bal1.txt
+
+echo "***************/ INDEED /**************" >> Bal1.txt
+sh Ledger -empty -columns 39 bal Checking Wallet >> Bal1.txt
+
+echo "***************/ FUNDS /***************" >> Bal2.txt
+sh Ledger -empty -columns 39 bal Funds >> Bal2.txt
+
+echo ""  >> Bal2.txt
+
+echo "/*************/ SUMMARY /*************/" >> Bal2.txt
+sh Ledger -columns 39 bal Ass|tail -n 1|awk '{print $1}'|sed 's/$/ Total:/'|awk '{print $2,$1}' > Bal3.txt
+
+sh Ledger -columns 39 bal Wallet Cash|tail -n 1|awk '{print $1}'|sed 's/$/ Money:/'|awk '{print $2,$1}' >> Bal3.txt
+
+sh Ledger -columns 39 bal Checking Bank|tail -n 1|awk '{print $1}'|sed 's/$/ Bank:/'|awk '{print $2,$1}' >> Bal3.txt
+
+tool/boxes -s 39 -f tool/boxes.cfg Bal3.txt|tail -n +2 >> Bal2.txt
+
+tool/pr -tm -w82 Bal1.txt Bal2.txt|expand >> networth.tmp
+rm Bal1.txt Bal2.txt Bal3.txt
+
+#echo "————————————————————————————————————————————————————————————————————————————————"  >>networth.tmp
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# cashfow.tmp
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#sh Ledger -columns 80 reg Ass | tail -n 15 >>networth.tmp
+
+today=$(date '+%Y/%m/%d')
+date '+%Y/%m/%d' | awk -F '/' '{$1 = ($1 == 1) ? 1 : $1-1}1' OFS='/' >date.tmp
+lastyear=$(cat date.tmp)
+rm date.tmp
+
+sh Ledger -f journal.txt reg Ass|awk '{print $1,$NF}'|tool/date.exe -start $lastyear -end $today >PlotAss.txt
+sh Ledger -f journal.txt reg Check Wallet|awk '{print $1,$NF}'|tool/date.exe -start $lastyear -end $today >PlotCash.txt
+sh Ledger -f journal.txt reg Funds|awk '{print $1,$NF}'|tool/date.exe -start $lastyear -end $today >PlotFunds.txt
+
+tool/gnuplot plot/PlotTerm.txt|tail -n +2|head -n 19 >>networth.tmp
+rm PlotAss.txt PlotFunds.txt PlotCash.txt
+
+echo "————————————————————————————————————————————————————————————————————————————————"  >>networth.tmp
+
+sh Ledger -columns 80 reg Ass | tail -n 20 >>networth.tmp
+
+echo "————————————————————————————————————————————————————————————————————————————————"  >>networth.tmp
+
+sh Ledger -f journal.txt -e 2022/01/01 reg Inc|awk '{print $1,$NF}'|sed "s/-//"|tool/date.exe -start $lastyear -end $today>Plot-Inc.txt
+sh Ledger -f journal.txt -e 2022/01/01 reg Exp|awk '{print $1,$NF}'|tool/date.exe -start $lastyear -end $today>Plot-Exp.txt 
+
+tool/gnuplot plot/CashPlotTerm.txt|tail -n +2 >>networth.tmp
+rm Plot-Inc.txt Plot-Exp.txt
+
+echo "————————————————————————————————————————————————————————————————————————————————"  >>networth.tmp
+
+sh Ledger -columns 80 -empty -depth 2 bal Inc Exp >>networth.tmp
+
+echo "————————————————————————————————————————————————————————————————————————————————"  >>networth.tmp
+
+sh Ledger -columns 80 reg Inc Exp | tail -n 30 >>networth.tmp
+
+echo "————————————————————————————————————————————————————————————————————————————————"  >>networth.tmp
+
+sh Ledger -columns 80 -depth 1 bal Inc Exp Ass >>networth.tmp
+
+echo "————————————————————————————————————————————————————————————————————————————————"  >>networth.tmp
+
+tool/gosttk -digest "*.txt" >>networth.tmp
+
+
+echo "————————————————————————————————————————————————————————————————————————————————"  >>networth.tmp
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# stats.tmp
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+sh Ledger -columns 80 stats >>networth.tmp
+
+sh Ledger -columns 58 print|unix2dos >Conjoint.txt
+tool/wc Conjoint.txt  >>networth.tmp
+
+cmac=$(tool/gosttk -cmac -pbkdf2 -key "nucnmaio" < Journal.txt)
+shred -zu Conjoint.txt
+
+echo "——————————————————————————————————————————————" >>networth.tmp
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# stats.tmp
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+uuid=$(tool/uuid)
+tool/qrcode $uuid > plot/qrcode.png
+
+echo "CMAC : $cmac" >>networth.tmp
+echo "UUID : $uuid" >>networth.tmp
+
+#echo "Device: BLU Studio X8 - Android 4.7 Kitkat" >>networth.tmp
+
+if [ "$1" == "rot13" ]; then
+	cat networth.tmp|tool/rot13 > networth2.tmp
+	cat networth2.tmp > networth.tmp
+	rm networth2.tmp
+fi
+
+data=$(date)
+dox=$(date +%j)
+doy=$(tool/roman)
+
+tool/txt2pdf -l "ELECTRONICALLY ISSUED DOCUMENT - Lab, $doy" -f networth.tmp -q plot/qrcode.png -n -p -a "nucnmaio" -t "TRIAL BALANCE" > Balance.pdf
+
+shred -zu networth.tmp
