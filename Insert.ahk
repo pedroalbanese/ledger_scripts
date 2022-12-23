@@ -37,3 +37,4 @@ return
 	While, !objExec.StdOut.AtEndOfStream
 		result := objExec.StdOut.ReadAll()
 	Send % StrReplace(result, "`r")
+return
