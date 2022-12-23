@@ -1,2 +1,2 @@
 # ledger_scripts
-Financial Tracking System
+Unix-based Personal Financial Tracking System
