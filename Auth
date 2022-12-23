@@ -1,10 +1,10 @@
 #!/bin/bash
 
 if [ "$1" = "Verify" ]; then
-	src=$(cat -|tee opa2.txt|tool/jwt -key shared.txt -alg HS256 -verify - -show -|grep src|awk '{print $2}'|awk -F"," '{print $1}'| tr -d '"')
-	acc=$(cat opa2.txt|tool/jwt -key shared.txt -alg HS256 -verify - -show -|grep acc|awk '{print $2}'|awk -F"," '{print $1}'| tr -d '"')
-	cat opa2.txt |tool/jwt -key shared.txt -alg HS256 -verify -|tool/json2csv -header-style slash >Auth.csv
-	rm opa2.txt
+	src=$(cat -|tee tmp.txt|tool/jwt -key shared.txt -alg HS256 -verify - -show -|grep src|awk '{print $2}'|awk -F"," '{print $1}'| tr -d '"')
+	acc=$(cat tmp.txt|tool/jwt -key shared.txt -alg HS256 -verify - -show -|grep acc|awk '{print $2}'|awk -F"," '{print $1}'| tr -d '"')
+	cat tmp.txt |tool/jwt -key shared.txt -alg HS256 -verify -|tool/json2csv -header-style slash >Auth.csv
+	rm tmp.txt
 	tool/limport -date-format "2006/01/02" -f main.txt -set-search "$acc" "$src" Auth.csv
 	rm Auth.csv
 elif [ "$1" = "Sign" ]; then
