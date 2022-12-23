@@ -1,2 +1,2 @@
 # ledger_scripts
-Unix-based Personal Financial Tracking System
+Unix-based Cross-platform Personal Financial Tracking System
