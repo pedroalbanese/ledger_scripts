@@ -11,10 +11,10 @@ data=$(date +%Y-%m-%d)
 
 tool/tar -c -f - plot/CashPlotTerm.txt plot/PlotTerm.txt Journal.txt JointCSV.txt Main.txt "Finances - Card.csv" "Finances - Cash.csv" "Finances - Paypal.csv" "Finances - Withdraw.csv" tool/ledger.exe tool/limport.exe tool/equity.exe tool/ledger.exe tool/llint.exe tool/lprint.exe Ledger PDF Backup Insert PDF.bat|tool/lzma -c|tool/gosttk -crypt enc -pbkdf2 -key nucnmaio > $data.tlz
 
-tool/gosttk -crypt dec -pbkdf2 -key nucnmaio < $data.tlz|tool/lzma -d -c|tool/tar -l -f -
+tool/gosttk -crypt dec -pbkdf2 -key pass < $data.tlz|tool/lzma -d -c|tool/tar -l -f -
 
-#tool/sfk ftp -user=inradice -pw=nucnmaio 172.255.255.149:21 put $data.tlz
-tool/sfk ftp -user=inradice -pw=nucnmaio ftpupload1.depositfiles.org put $data.tlz
+#tool/sfk ftp -user=username -pw=pass 172.255.255.149:21 put $data.tlz
+tool/sfk ftp -user=username -pw=pass ftpupload1.depositfiles.org put $data.tlz
 
 rm $data.tlz hash/Hash.txt Hash.txt
 
