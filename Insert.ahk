@@ -1,6 +1,14 @@
-; Script containing date/time Snippets
-; UTF-8
-; cmd /e:on /c
+; ====================================================
+; ================ AHK CHAOCIPHER GUI ================
+; ====================================================
+; AutoHotKey version: 1.1.35.0
+; Language:           English
+; Author:             Pedro F. Albanese
+; Modified:           -
+;
+; ----------------------------------------------------------------------------
+; Script Start
+; ----------------------------------------------------------------------------
 
 ::<now>::
 	FormatTime, CurrentDateTime,, yyyy/M/d h:mm tt ; It will look like 2022/11/26 3:53 PM
