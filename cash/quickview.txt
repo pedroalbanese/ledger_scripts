@@ -1,0 +1,82 @@
+[[account]]
+name = "Assets"
+short_name = "Total"
+
+[[account]]
+name = "Assets:Checking"
+short_name = "Checking"
+
+[[account]]
+name = "Assets:Wallet"
+short_name = "Wallet"
+
+[[account]]
+name = "Assets:Funds"
+short_name = "Funds"
+
+[[account]]
+name = "Assets:Funds:Bank"
+short_name = "Funds:Bank"
+
+[[account]]
+name = "Assets:Funds:Cash"
+short_name = "Funds:Cash"
+
+[[account]]
+name = "Liabilities:MasterCard"
+short_name = "Card"
+
+[[report]]
+name = "Income"
+chart = "line"
+date_range = "Current Year"
+date_freq = "Monthly"
+accounts = [ "Income:*" ]
+exclude_account_summary = [ "Job Expenses" ]
+
+    [[report.calculated_account]]
+    name = "Total"
+
+        [[report.calculated_account.account_operation]]
+        name = "Income"
+        operation = "+"
+
+[[report]]
+name = "Expenses"
+chart = "line"
+date_range = "Current Year"
+date_freq = "Monthly"
+accounts = [ "Expenses:*" ]
+
+    [[report.calculated_account]]
+    name = "Total"
+
+        [[report.calculated_account.account_operation]]
+        name = "Expenses"
+        operation = "+"
+
+[[report]]
+name = "Net Worth"
+chart = "line"
+date_range = "Current Year"
+date_freq = "Monthly"
+accounts = [ "Assets:*" ]
+
+[[report]]
+name = "Cash Flow"
+chart = "stackedbar"
+date_range = "YTD"
+date_freq = "Monthly"
+accounts = [ "Income", "Expenses" ]
+exclude_account_trans = [ "Income:Wife" ]
+
+    [[report.calculated_account]]
+    name = "Savings"
+
+        [[report.calculated_account.account_operation]]
+        name = "Income"
+        operation = "+"
+        
+        [[report.calculated_account.account_operation]]
+        name = "Expenses"
+        operation = "-"
