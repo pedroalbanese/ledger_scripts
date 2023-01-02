@@ -10,6 +10,18 @@
     Assets:Checking                                                0
     Assets:Wallet                                                  0
     Equity                                                         0
+    
+; Utilities
+;-------------------------------------------------------------------
+2020/03/01 Utilities
+    Expenses:Utilities:Electricity                                 0
+    Expenses:Utilities:Phone                                       0
+    Expenses:Other:Toll                                            0
+    Expenses:Other:Alms                                            0
+    Expenses:Other:Baksheesh                                       0
+    Assets:Checking                                               -0
+    Expenses:Sustenance:Food:Fast Food                             0
+    Expenses:Sustenance:Food:Dining Out                            0
 
 ; Paypal
 ;-------------------------------------------------------------------
