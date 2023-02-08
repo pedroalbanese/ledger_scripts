@@ -1,11 +1,11 @@
 #!/bin/bash
 
 if [ "$1" = "Verify" ]; then
-	src=$(cat -|tee tmp.txt|tool/jwt -key shared.txt -alg HS256 -verify - -show -|grep src|awk '{print $2}'|awk -F"," '{print $1}'| tr -d '"')
-	acc=$(cat tmp.txt|tool/jwt -key shared.txt -alg HS256 -verify - -show -|grep acc|awk '{print $2}'|awk -F"," '{print $1}'| tr -d '"')
-	cat tmp.txt |tool/jwt -key shared.txt -alg HS256 -verify -|tool/json2csv -header-style slash >Auth.csv
-	rm tmp.txt
-	tool/limport -date-format "2006/01/02" -f main.txt -set-search "$acc" "$src" Auth.csv
+	src=$(cat -|tee temp.txt|tool/jwt -key public.pem -alg EdDSA -show -|grep src|awk '{print $2}'|awk -F"," '{print $1}'| tr -d '"')
+	acc=$(cat temp.txt|tool/jwt -key public.pem -alg EdDSA -show -|grep acc|awk '{print $2}'|awk -F"," '{print $1}'| tr -d '"')
+	cat temp.txt |tool/jwt -key public.pem -alg EdDSA -verify -|tool/json2csv -header-style slash >Auth.csv
+	rm temp.txt
+	tool/limport -date-format "2006/01/02" -f main.txt -set-search "$src" "$acc" Auth.csv
 	rm Auth.csv
 elif [ "$1" = "Sign" ]; then
 	if [ -z "$2" ]
@@ -16,11 +16,11 @@ elif [ "$1" = "Sign" ]; then
 	fi
 	uuid=$(tool/uuid)
 	date=$(date '+%Y/%m/%d')
-	tool/jwt -key shared.txt -alg HS256 -claim date=$date -claim payee="$2" -claim amount="$3" -claim uuid=$uuid -header src="$4" -header acc="$5" -sign +
+	tool/jwt -key private.pem -alg EdDSA -claim date=$date -claim payee="$2" -claim amount="$3" -claim uuid=$uuid -header src="$4" -header acc="$5" -sign +
 elif [ "$1" = "Check" ]; then
-	cat - |tool/jwt -key shared.txt -alg HS256 -verify -|tool/json2csv -header-style slash
+	cat - |tool/jwt -key private.pem -alg EdDSA -verify -|tool/json2csv -header-style slash
 elif [ "$1" = "Parse" ]; then
-	cat - |tool/jwt -key shared.txt -alg HS256 -verify -
+	cat - |tool/jwt -key private.pem -alg EdDSA -verify -
 elif [ "$1" = "Show" ]; then
-	cat - |tool/jwt -key shared.txt -alg HS256 -verify - -show -
+	cat - |tool/jwt -key private.pem -alg EdDSA -show -
 fi
