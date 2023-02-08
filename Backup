@@ -13,9 +13,9 @@ tool/tar -c -f - plot/CashPlotTerm.txt plot/PlotTerm.txt Journal.txt JointCSV.tx
 
 tool/edgetk -crypt dec -cipher anubis -md whirlpool -mode ocb3 -pbkdf2 -key nucnmaio < $data.tar.br|tool/brotli -d -c|tool/tar -l -f -
 
-#tool/sfk ftp -user=username -pw=pass 172.255.255.149:21 put $data.tlz
-tool/sfk ftp -user=username -pw=pass ftpupload1.depositfiles.org put $data.tlz
+#tool/sfk ftp -user=username -pw=pass 172.255.255.149:21 put $data.tar.br
+tool/sfk ftp -user=username -pw=pass ftpupload1.depositfiles.org put $data.tar.br
 
-rm $data.tlz hash/Hash.txt Hash.txt
+rm $data.tar.br hash/Hash.txt Hash.txt
 
 rmdir hash
