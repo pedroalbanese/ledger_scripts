@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# ConverCSV
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+echo ""|unix2dos > /storage/sdcard0/PortoDB/export/JointCSV.txt
+
+/storage/sdcard0/PortoDB/export/tool/limport -f /storage/sdcard0/PortoDB/export/Main.txt -date-format "2006-01-02" Assets:Wallet "/storage/sdcard0/PortoDB/export/Finances - Cash.csv"|/storage/sdcard0/PortoDB/export/tool/ledger -f - -columns 59 print|unix2dos >> /storage/sdcard0/PortoDB/export/JointCSV.txt
+
+/storage/sdcard0/PortoDB/export/tool/limport -f /storage/sdcard0/PortoDB/export/Main.txt -date-format "2006-01-02" Assets:Checking "/storage/sdcard0/PortoDB/export/Finances - Card.csv"|/storage/sdcard0/PortoDB/export/tool/ledger -f - -columns 59 print|unix2dos >> /storage/sdcard0/PortoDB/export/JointCSV.txt
+
+/storage/sdcard0/PortoDB/export/tool/limport -f /storage/sdcard0/PortoDB/export/Main.txt -date-format "2006-01-02" -set-search Assets:Checking Paypal "/storage/sdcard0/PortoDB/export/Finances - Paypal.csv"|/storage/sdcard0/PortoDB/export/tool/ledger -f - -columns 59 print|unix2dos >> /storage/sdcard0/PortoDB/export/JointCSV.txt
+
+/storage/sdcard0/PortoDB/export/tool/limport -f /storage/sdcard0/PortoDB/export/Main.txt -date-format "2006-01-02" -neg -set-search Assets:Checking Assets:Wallet "/storage/sdcard0/PortoDB/export/Finances - Withdraw.csv"|/storage/sdcard0/PortoDB/export/tool/ledger -f - -columns 59 print|unix2dos >> /storage/sdcard0/PortoDB/export/JointCSV.txt
